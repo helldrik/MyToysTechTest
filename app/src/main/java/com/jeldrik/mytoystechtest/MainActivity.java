@@ -1,8 +1,11 @@
 package com.jeldrik.mytoystechtest;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.Fragment;
+import android.text.Layout;
 import android.view.View;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -12,13 +15,16 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.widget.Button;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     WebView myWebView;
     static final String START_URL="https://www.mytoys.de";
+    View header;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,8 +40,27 @@ public class MainActivity extends AppCompatActivity
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
+
+/*
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+
+        //adding a header to the navigation view
+        header=navigationView.inflateHeaderView(R.layout.nav_header_main);
+
+        Button closeDrawerBtn=(Button)header.findViewById(R.id.closeDrawerBtn);
+        closeDrawerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.onBackPressed();
+            }
+        });
+
+
+*/
+        Fragment menuFragment=new MenuFragment();
+       getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
+
 
         myWebView=(WebView)findViewById(R.id.myWebView);
         myWebView.loadUrl(START_URL);
@@ -98,4 +123,5 @@ public class MainActivity extends AppCompatActivity
         drawer.closeDrawer(GravityCompat.START);
         return true;
     }
+
 }
