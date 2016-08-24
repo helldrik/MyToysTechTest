@@ -17,7 +17,7 @@
         android:layout_weight="1"
         />
 
-    <Button
+    <TextView
         android:id="@+id/backBtn"
         android:layout_width="30dp"
         android:layout_height="30dp"

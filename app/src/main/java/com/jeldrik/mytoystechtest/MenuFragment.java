@@ -100,7 +100,6 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
             parseJson(jsonArray);
             setListAdapter(mAdapter);
             getListView().setOnItemClickListener(this);
-            Log.e("MenuFragment", "Number of items: "+mAdapter.getCount());
         } catch (JSONException e) {
             e.printStackTrace();
             Log.e("MenuFragment", "error in MenuFragment "+e );
@@ -114,7 +113,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 if(null!=jsonObject && null!=mAdapter) {
                     mAdapter.addItem(jsonObject);
-                    if (jsonObject.get("type").equals("section")) {
+                    if (jsonObject.get("type").equals("section") && jsonObject.has("children")) {
                         parseJson(jsonObject.getJSONArray("children"));
                     }
                 }
@@ -128,11 +127,22 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         //Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
-        MenuFragment subMenuFragment= new MenuFragment();
-        Bundle bundle = new Bundle();
-        bundle.putBoolean("isSubmenu",true);
-        subMenuFragment.setArguments(bundle);
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
+        JSONObject jsonObject=mAdapter.getItem(position);
+        try{
+            if(jsonObject.getString("type").equals("node")&& jsonObject.has("children")) {
+                Log.e("MenuFragment",jsonObject.getString("label"));
+                JSONArray jsonArray = jsonObject.getJSONArray("children");
+                MenuFragment subMenuFragment = new MenuFragment();
+                Bundle bundle = new Bundle();
+                bundle.putBoolean("isSubmenu", true);
+                bundle.putString("jsonArray", jsonArray.toString());
+                subMenuFragment.setArguments(bundle);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
+            }
+        }catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("MenuFragment", "error in MenuFragment onItemClick() "+e );
+        }
     }
 
     @Override

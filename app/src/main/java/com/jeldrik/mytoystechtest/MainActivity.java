@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onResponse(JSONObject response) {
-                        Log.e("MainActivity","Response is: "+ response);
+                       // Log.e("MainActivity","Response is: "+ response);
                         //TODO add loading screen to drawer befor starting volley request and swap it with fragment here.
                         try {
                             JSONArray jsonArray = response.getJSONArray("navigationEntries");
