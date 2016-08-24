@@ -19,7 +19,14 @@ import android.widget.Toast;
 
 public class MenuFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
-    int array;
+    int array;  //debug
+
+    private static final int LIST_ITEM_TYPE_LINK = 0;
+    private static final int LIST_ITEM_TYPE_NODE = 1;
+    private static final int LIST_ITEM_TYPE_SECTION = 2;
+
+    MenuAdapter mAdapter;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
@@ -65,9 +72,14 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        mAdapter=new MenuAdapter(getActivity());
 
-        ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), array, android.R.layout.simple_list_item_1);
-        setListAdapter(adapter);
+        for(int i=0;i<20;i++){
+            mAdapter.addItem("item"+i);
+        }
+
+        //ArrayAdapter adapter = ArrayAdapter.createFromResource(getActivity(), array, android.R.layout.simple_list_item_1);
+        setListAdapter(mAdapter);
         getListView().setOnItemClickListener(this);
     }
 
