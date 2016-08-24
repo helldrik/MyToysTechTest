@@ -65,13 +65,6 @@ public class MainActivity extends AppCompatActivity
 
         if(savedInstanceState!=null){
             myWebView.restoreState(savedInstanceState);
-            sJsonArray=savedInstanceState.getString("sJsonArray","");
-            Log.e("MainActivity","JSON: "+sJsonArray);
-            Fragment menuFragment=new MenuFragment();
-            Bundle b=new Bundle();
-            b.putString("jsonArray",sJsonArray);
-            menuFragment.setArguments(b);
-            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
         }
         else {
             fetchData();
@@ -176,7 +169,6 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("sJsonArray",sJsonArray);
         myWebView.saveState(outState);
     }
 }

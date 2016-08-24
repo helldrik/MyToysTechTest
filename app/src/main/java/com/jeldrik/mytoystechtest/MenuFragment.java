@@ -30,13 +30,21 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
     private String menuTitle;
     private boolean isSubMenu;
     MenuAdapter mAdapter;
+    View mView;
 
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_menu, container, false);
+         mView = inflater.inflate(R.layout.fragment_menu, container, false);
 
+        setRetainInstance(true);
+        return mView;
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         Bundle extras=getArguments();
         if(extras!=null) {
@@ -45,36 +53,10 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
             menuTitle=extras.getString("menuTitle","");
 
         }
-        else{
-            sJsonArray="";
-            isSubMenu= false;
-        }
-        if(savedInstanceState!=null){
-            sJsonArray=savedInstanceState.getString("jsonArray","");
-            isSubMenu=savedInstanceState.getBoolean("isSubmenu",false);
-            menuTitle=savedInstanceState.getString("menuTitle","");
-        }
 
-        if(isSubMenu) {
 
-            ImageView logo = (ImageView) view.findViewById(R.id.logo);
-            logo.setVisibility(View.GONE);
 
-            Button backBtn = (Button) view.findViewById(R.id.backBtn);
-            backBtn.setVisibility(View.VISIBLE);
-            backBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    FragmentManager fm = getActivity().getSupportFragmentManager();
-                    fm.popBackStack();
-                }
-            });
-
-            TextView title=(TextView)view.findViewById(R.id.menuTitle);
-            title.setText(menuTitle);
-        }
-
-        Button btn=(Button)view.findViewById(R.id.closeDrawerBtn);
+        Button btn=(Button)mView.findViewById(R.id.closeDrawerBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -87,15 +69,27 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
             }
         });
 
+        if(isSubMenu) {
 
-        return view;
-    }
+            ImageView logo = (ImageView) mView.findViewById(R.id.logo);
+            logo.setVisibility(View.GONE);
 
-    @Override
-    public void onActivityCreated(Bundle savedInstanceState) {
-        super.onActivityCreated(savedInstanceState);
+            Button backBtn = (Button) mView.findViewById(R.id.backBtn);
+            backBtn.setVisibility(View.VISIBLE);
+            backBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    FragmentManager fm = getActivity().getSupportFragmentManager();
+                    fm.popBackStack();
+                }
+            });
 
-            try {
+            TextView title=(TextView)mView.findViewById(R.id.menuTitle);
+            title.setText(menuTitle);
+        }
+
+
+        try {
                 mAdapter = new MenuAdapter(getActivity());
                 JSONArray jsonArray = new JSONArray(sJsonArray);
                 parseJson(jsonArray);
@@ -151,14 +145,5 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
             e.printStackTrace();
             Log.e("MenuFragment", "error in MenuFragment onItemClick() "+e );
         }
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-
-        outState.putString("jsonArray",sJsonArray);
-        outState.putBoolean("isSubMenu",isSubMenu);
-        outState.putString("menuTitle",menuTitle);
-        super.onSaveInstanceState(outState);
     }
 }
