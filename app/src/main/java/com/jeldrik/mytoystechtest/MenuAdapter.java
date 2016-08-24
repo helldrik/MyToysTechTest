@@ -57,6 +57,8 @@ public class MenuAdapter extends BaseAdapter {
                 rowView=mInflater.inflate(R.layout.section_item,viewGroup,false);
                 TextView title=(TextView)rowView.findViewById(R.id.sectionTitle);
                 title.setText(mData.get(position).getString("label"));
+                rowView.setEnabled(false);
+                rowView.setOnClickListener(null);
             }
             else if(mData.get(position).getString("type").equals("node")){
                 rowView=mInflater.inflate(R.layout.node_item,viewGroup,false);
