@@ -25,8 +25,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONObject;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -70,8 +73,6 @@ public class MainActivity extends AppCompatActivity
 
 
 */
-        Fragment menuFragment=new MenuFragment();
-       getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
 
 
         myWebView=(WebView)findViewById(R.id.myWebView);
@@ -128,12 +129,15 @@ public class MainActivity extends AppCompatActivity
         String url ="https://mytoysiostestcase1.herokuapp.com/api/navigation";
 
 // Request a string response from the provided URL.
-        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
-                new Response.Listener<String>() {
+        JsonObjectRequest jsonObjectRequest = new JsonObjectRequest(Request.Method.GET, url,null,
+                new Response.Listener<JSONObject>() {
 
                     @Override
-                    public void onResponse(String response) {
+                    public void onResponse(JSONObject response) {
                         Log.e("MainActivity","Response is: "+ response);
+                        //TODO add loading screen to drawer befor starting volley request and swap it with fragment here.
+                        Fragment menuFragment=new MenuFragment();
+                        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
                     }
 
                 }, new Response.ErrorListener() {
@@ -151,7 +155,7 @@ public class MainActivity extends AppCompatActivity
             }
         };
 // Add the request to the RequestQueue.
-        queue.add(stringRequest);
+        queue.add(jsonObjectRequest);
     }
 
 }
