@@ -50,6 +50,11 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
             @Override
             public void onClick(View view) {
                 getActivity().onBackPressed();
+                //deleting all fragments except the first one
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                for (int i = 0; i < fm.getBackStackEntryCount()-1; ++i) {
+                    fm.popBackStack();
+                }
             }
         });
 
