@@ -18,8 +18,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.webkit.WebView;
 import android.widget.Button;
+import android.widget.RelativeLayout;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -117,6 +119,7 @@ public class MainActivity extends AppCompatActivity
     public void openLink(String url){
         myWebView.loadUrl(url);
     }
+
 
     private void fetchData(){
         final RequestQueue queue = Volley.newRequestQueue(this);

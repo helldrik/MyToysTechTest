@@ -135,7 +135,9 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                 bundle.putBoolean("isSubmenu", true);
                 bundle.putString("jsonArray", jsonArray.toString());
                 subMenuFragment.setArguments(bundle);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
+                getActivity().getSupportFragmentManager().beginTransaction()
+                        .setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right,R.anim.slide_in_right,R.anim.slide_out_left)
+                        .replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
             }
             else if((jsonObject.getString("type").equals("link")||jsonObject.getString("type").equals("external-link")) && jsonObject.has("url")){
                 ((MainActivity)getActivity()).openLink(jsonObject.getString("url"));
