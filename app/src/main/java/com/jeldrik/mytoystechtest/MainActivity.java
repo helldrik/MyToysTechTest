@@ -60,12 +60,11 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
 
-
         myWebView=(WebView)findViewById(R.id.myWebView);
-        myWebView.loadUrl(url);
-        myWebView.getSettings().setJavaScriptEnabled(true);
+
 
         if(savedInstanceState!=null){
+            myWebView.restoreState(savedInstanceState);
             sJsonArray=savedInstanceState.getString("sJsonArray","");
             Log.e("MainActivity","JSON: "+sJsonArray);
             Fragment menuFragment=new MenuFragment();
@@ -76,6 +75,8 @@ public class MainActivity extends AppCompatActivity
         }
         else {
             fetchData();
+            myWebView.loadUrl(url);
+            myWebView.getSettings().setJavaScriptEnabled(true);
         }
     }
 
@@ -172,8 +173,8 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putString("sJsonArray",sJsonArray);
-        Log.e("MainActivity","JSON: "+sJsonArray);
         super.onSaveInstanceState(outState);
+        outState.putString("sJsonArray",sJsonArray);
+        myWebView.saveState(outState);
     }
 }
