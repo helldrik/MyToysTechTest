@@ -20,6 +20,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+
 
 public class MenuFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
@@ -92,24 +94,32 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        try {
-            JSONArray jsonArray=new JSONArray(sJsonArray);
+        try{
             mAdapter=new MenuAdapter(getActivity());
-            for(int i=0;i<jsonArray.length();i++) {
-                JSONObject jsonObject=jsonArray.getJSONObject(i);
-                mAdapter.addItem(jsonObject);
-                if(jsonObject.get("type").equals("section")) {
-                    JSONArray children = jsonObject.getJSONArray("children");
-                    for(int i1=0;i1<children.length();i1++){
-                        JSONObject child=children.getJSONObject(i1);
-                        mAdapter.addItem(child);
-                    }
-                }
-            }
+            JSONArray jsonArray=new JSONArray(sJsonArray);
+            parseJson(jsonArray);
             setListAdapter(mAdapter);
             getListView().setOnItemClickListener(this);
             Log.e("MenuFragment", "Number of items: "+mAdapter.getCount());
         } catch (JSONException e) {
+            e.printStackTrace();
+            Log.e("MenuFragment", "error in MenuFragment "+e );
+        }
+    }
+
+    //recursive function to return all sections within sections
+    private void parseJson(JSONArray jsonArray){
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                JSONObject jsonObject = jsonArray.getJSONObject(i);
+                if(null!=jsonObject && null!=mAdapter) {
+                    mAdapter.addItem(jsonObject);
+                    if (jsonObject.get("type").equals("section")) {
+                        parseJson(jsonObject.getJSONArray("children"));
+                    }
+                }
+            }
+        }catch (JSONException e) {
             e.printStackTrace();
             Log.e("MenuFragment", "error in MenuFragment "+e );
         }
