@@ -6,7 +6,8 @@
 
     <LinearLayout
     android:layout_width="match_parent"
-    android:layout_height="50dp"
+    android:layout_height="wrap_content"
+        android:minHeight="50dp"
     android:background="@color/yellow"
     android:gravity="center"
     android:orientation="horizontal"
@@ -36,9 +37,12 @@
 
         </RelativeLayout>
 <!-- Stretcher View to push button all the way to the right !-->
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
+    <TextView
+        android:id="@+id/menuTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="25sp"
+        android:textColor="@color/menuTextColor"
         android:layout_weight="1"
         />
 

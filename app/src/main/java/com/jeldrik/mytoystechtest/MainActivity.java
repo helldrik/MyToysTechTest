@@ -126,7 +126,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     private void fetchData(){
-        RequestQueue queue = Volley.newRequestQueue(this);
+        final RequestQueue queue = Volley.newRequestQueue(this);
         String url ="https://mytoysiostestcase1.herokuapp.com/api/navigation";
 
 // Request a string response from the provided URL.
@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity
                             Fragment menuFragment=new MenuFragment();
                             menuFragment.setArguments(b);
                             getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
+                            queue.stop();
 
                         }catch(JSONException e) {
                             Log.e("MainActivity", "Could not parse JSON from Server "+e);
@@ -157,6 +158,7 @@ public class MainActivity extends AppCompatActivity
             @Override
             public void onErrorResponse(VolleyError error) {
                 Log.e("MainActivity","That didn't work! "+error);
+                queue.stop();
             }
         }){
 

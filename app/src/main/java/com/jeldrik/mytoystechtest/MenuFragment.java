@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import org.json.JSONArray;
@@ -25,9 +26,8 @@ import java.util.ArrayList;
 
 public class MenuFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
-    int array;  //debug
-
     private String sJsonArray;
+    private String menuTitle;
     private boolean isSubMenu;
     MenuAdapter mAdapter;
 
@@ -38,12 +38,12 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
 
 
-        array=R.array.Planets;
-
         Bundle extras=getArguments();
         if(extras!=null) {
             sJsonArray=extras.getString("jsonArray","");
             isSubMenu=extras.getBoolean("isSubmenu",false);
+            menuTitle=extras.getString("menuTitle","");
+
         }
         else{
             sJsonArray="";
@@ -52,10 +52,10 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
         if(savedInstanceState!=null){
             sJsonArray=savedInstanceState.getString("jsonArray","");
             isSubMenu=savedInstanceState.getBoolean("isSubmenu",false);
+            menuTitle=savedInstanceState.getString("menuTitle","");
         }
 
         if(isSubMenu) {
-            array = R.array.Days;
 
             ImageView logo = (ImageView) view.findViewById(R.id.logo);
             logo.setVisibility(View.GONE);
@@ -69,6 +69,9 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                     fm.popBackStack();
                 }
             });
+
+            TextView title=(TextView)view.findViewById(R.id.menuTitle);
+            title.setText(menuTitle);
         }
 
         Button btn=(Button)view.findViewById(R.id.closeDrawerBtn);
@@ -134,6 +137,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                 JSONArray jsonArray = jsonObject.getJSONArray("children");
                 MenuFragment subMenuFragment = new MenuFragment();
                 Bundle bundle = new Bundle();
+                bundle.putString("menuTitle",jsonObject.getString("label"));
                 bundle.putBoolean("isSubmenu", true);
                 bundle.putString("jsonArray", jsonArray.toString());
                 subMenuFragment.setArguments(bundle);
@@ -154,6 +158,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
 
         outState.putString("jsonArray",sJsonArray);
         outState.putBoolean("isSubMenu",isSubMenu);
+        outState.putString("menuTitle",menuTitle);
         super.onSaveInstanceState(outState);
     }
 }
