@@ -29,6 +29,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -136,8 +138,19 @@ public class MainActivity extends AppCompatActivity
                     public void onResponse(JSONObject response) {
                         Log.e("MainActivity","Response is: "+ response);
                         //TODO add loading screen to drawer befor starting volley request and swap it with fragment here.
-                        Fragment menuFragment=new MenuFragment();
-                        getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
+                        try {
+                            JSONArray jsonArray = response.getJSONArray("navigationEntries");
+
+                            Bundle b=new Bundle();
+                            b.putString("jsonArray",jsonArray.toString());
+
+                            Fragment menuFragment=new MenuFragment();
+                            menuFragment.setArguments(b);
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
+
+                        }catch(JSONException e) {
+                            Log.e("MainActivity", "Could not parse JSON from Server "+e);
+                        }
                     }
 
                 }, new Response.ErrorListener() {

@@ -21,27 +21,43 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
 
     int array;  //debug
 
-    private static final int LIST_ITEM_TYPE_LINK = 0;
-    private static final int LIST_ITEM_TYPE_NODE = 1;
-    private static final int LIST_ITEM_TYPE_SECTION = 2;
-
+    private String sJsonArray;
+    private boolean isSubMenu;
     MenuAdapter mAdapter;
+
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_menu, container, false);
-        Bundle extras=getArguments();
+
 
         array=R.array.Planets;
-        if(extras!=null) {
 
-            Log.e("MenuFragment", Integer.toString(extras.getInt("position", -1)));
+        Bundle extras=getArguments();
+        if(extras!=null) {
+            sJsonArray=extras.getString("jsonArray","");
+            isSubMenu=extras.getBoolean("isSubmenu",false);
+
+            Log.e("MenuFragment", Boolean.toString(extras.getBoolean("isSubmenu",false)));
+            Log.e("MenuFragment",sJsonArray);
+        }
+        else{
+            sJsonArray="";
+            isSubMenu= false;
+        }
+        if(savedInstanceState!=null){
+            sJsonArray=savedInstanceState.getString("jsonArray","");
+            isSubMenu=savedInstanceState.getBoolean("isSubmenu",false);
+        }
+
+        if(isSubMenu) {
             array = R.array.Days;
 
-            ImageView logo=(ImageView)view.findViewById(R.id.logo);
+            ImageView logo = (ImageView) view.findViewById(R.id.logo);
             logo.setVisibility(View.GONE);
 
-            Button backBtn=(Button)view.findViewById(R.id.backBtn);
+            Button backBtn = (Button) view.findViewById(R.id.backBtn);
             backBtn.setVisibility(View.VISIBLE);
             backBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -88,8 +104,16 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
         //Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
         MenuFragment subMenuFragment= new MenuFragment();
         Bundle bundle = new Bundle();
-        bundle.putInt("position",position);
+        bundle.putBoolean("isSubmenu",true);
         subMenuFragment.setArguments(bundle);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+
+        outState.putString("jsonArray",sJsonArray);
+        outState.putBoolean("isSubMenu",isSubMenu);
+        super.onSaveInstanceState(outState);
     }
 }
