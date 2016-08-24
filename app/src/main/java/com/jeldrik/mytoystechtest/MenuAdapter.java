@@ -64,7 +64,7 @@ public class MenuAdapter extends BaseAdapter {
                 TextView title=(TextView)rowView.findViewById(R.id.nodeTitle);
                 title.setText(mData.get(position).getString("label"));
             }
-            else if(mData.get(position).getString("type").equals("link")) {
+            else if(mData.get(position).getString("type").equals("link") || mData.get(position).getString("type").equals("external-link")) {
                 rowView = mInflater.inflate(R.layout.link_item, viewGroup, false);
                 TextView title = (TextView) rowView.findViewById(R.id.linkTitle);
                 title.setText(mData.get(position).getString("label"));

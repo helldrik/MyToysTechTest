@@ -91,7 +91,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if(mAdapter==null) {
+
             try {
                 mAdapter = new MenuAdapter(getActivity());
                 JSONArray jsonArray = new JSONArray(sJsonArray);
@@ -102,7 +102,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                 e.printStackTrace();
                 Log.e("MenuFragment", "error in MenuFragment " + e);
             }
-        }
+
     }
 
     //recursive function to return all sections within sections
@@ -128,9 +128,9 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
 
         JSONObject jsonObject=mAdapter.getItem(position);
         try{
-            Toast.makeText(getActivity(), jsonObject.getString("label"), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(getActivity(), jsonObject.getString("label"), Toast.LENGTH_SHORT).show();
             if(jsonObject.getString("type").equals("node")&& jsonObject.has("children")) {
-                Log.e("MenuFragment",jsonObject.getString("label"));
+                //Log.e("MenuFragment",jsonObject.getString("label"));
                 JSONArray jsonArray = jsonObject.getJSONArray("children");
                 MenuFragment subMenuFragment = new MenuFragment();
                 Bundle bundle = new Bundle();
@@ -139,7 +139,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                 subMenuFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
             }
-            else if(jsonObject.getString("type").equals("link") && jsonObject.has("url")){
+            else if((jsonObject.getString("type").equals("link")||jsonObject.getString("type").equals("external-link")) && jsonObject.has("url")){
                 ((MainActivity)getActivity()).openLink(jsonObject.getString("url"));
                 getActivity().onBackPressed();
             }
