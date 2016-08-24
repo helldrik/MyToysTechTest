@@ -44,9 +44,6 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
         if(extras!=null) {
             sJsonArray=extras.getString("jsonArray","");
             isSubMenu=extras.getBoolean("isSubmenu",false);
-
-            Log.e("MenuFragment", Boolean.toString(extras.getBoolean("isSubmenu",false)));
-            Log.e("MenuFragment",sJsonArray);
         }
         else{
             sJsonArray="";
@@ -87,22 +84,24 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
             }
         });
 
+
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-
-        try{
-            mAdapter=new MenuAdapter(getActivity());
-            JSONArray jsonArray=new JSONArray(sJsonArray);
-            parseJson(jsonArray);
-            setListAdapter(mAdapter);
-            getListView().setOnItemClickListener(this);
-        } catch (JSONException e) {
-            e.printStackTrace();
-            Log.e("MenuFragment", "error in MenuFragment "+e );
+        if(mAdapter==null) {
+            try {
+                mAdapter = new MenuAdapter(getActivity());
+                JSONArray jsonArray = new JSONArray(sJsonArray);
+                parseJson(jsonArray);
+                setListAdapter(mAdapter);
+                getListView().setOnItemClickListener(this);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                Log.e("MenuFragment", "error in MenuFragment " + e);
+            }
         }
     }
 
@@ -126,9 +125,10 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        //Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+
         JSONObject jsonObject=mAdapter.getItem(position);
         try{
+            Toast.makeText(getActivity(), jsonObject.getString("label"), Toast.LENGTH_SHORT).show();
             if(jsonObject.getString("type").equals("node")&& jsonObject.has("children")) {
                 Log.e("MenuFragment",jsonObject.getString("label"));
                 JSONArray jsonArray = jsonObject.getJSONArray("children");
@@ -138,6 +138,10 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                 bundle.putString("jsonArray", jsonArray.toString());
                 subMenuFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
+            }
+            else if(jsonObject.getString("type").equals("link") && jsonObject.has("url")){
+                ((MainActivity)getActivity()).openLink(jsonObject.getString("url"));
+                getActivity().onBackPressed();
             }
         }catch (JSONException e) {
             e.printStackTrace();

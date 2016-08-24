@@ -2,6 +2,7 @@ package com.jeldrik.mytoystechtest;
 
 import android.app.FragmentManager;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
@@ -40,8 +41,9 @@ public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
 
     WebView myWebView;
-    static final String START_URL="https://www.mytoys.de";
-    View header;
+    String url="https://www.mytoys.de";
+    String sJsonArray;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,30 +60,23 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
 
-/*
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
-
-        //adding a header to the navigation view
-        header=navigationView.inflateHeaderView(R.layout.nav_header_main);
-
-        Button closeDrawerBtn=(Button)header.findViewById(R.id.closeDrawerBtn);
-        closeDrawerBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                MainActivity.this.onBackPressed();
-            }
-        });
-
-
-*/
-
 
         myWebView=(WebView)findViewById(R.id.myWebView);
-        myWebView.loadUrl(START_URL);
+        myWebView.loadUrl(url);
         myWebView.getSettings().setJavaScriptEnabled(true);
 
-        fetchData();
+        if(savedInstanceState!=null){
+            sJsonArray=savedInstanceState.getString("sJsonArray","");
+            Log.e("MainActivity","JSON: "+sJsonArray);
+            Fragment menuFragment=new MenuFragment();
+            Bundle b=new Bundle();
+            b.putString("jsonArray",sJsonArray);
+            menuFragment.setArguments(b);
+            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
+        }
+        else {
+            fetchData();
+        }
     }
 
     @Override
@@ -125,6 +120,9 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+    public void openLink(String url){
+        myWebView.loadUrl(url);
+    }
 
     private void fetchData(){
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -141,8 +139,9 @@ public class MainActivity extends AppCompatActivity
                         try {
                             JSONArray jsonArray = response.getJSONArray("navigationEntries");
 
+                            sJsonArray=jsonArray.toString();
                             Bundle b=new Bundle();
-                            b.putString("jsonArray",jsonArray.toString());
+                            b.putString("jsonArray",sJsonArray);
 
                             Fragment menuFragment=new MenuFragment();
                             menuFragment.setArguments(b);
@@ -171,4 +170,10 @@ public class MainActivity extends AppCompatActivity
         queue.add(jsonObjectRequest);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString("sJsonArray",sJsonArray);
+        Log.e("MainActivity","JSON: "+sJsonArray);
+        super.onSaveInstanceState(outState);
+    }
 }
