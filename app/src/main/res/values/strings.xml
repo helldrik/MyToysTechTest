@@ -14,25 +14,4 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menuLoadMsg">Loading Menu</string>
 
-    <string-array name="Planets">
-        <item>Sun</item>
-        <item>Mercury</item>
-        <item>Venus</item>
-        <item>Earth</item>
-        <item>Mars</item>
-        <item>Jupiter</item>
-        <item>Saturn</item>
-        <item>Uranus</item>
-        <item>Neptune</item>
-    </string-array>
-
-    <string-array name="Days">
-        <item>Mon</item>
-        <item>Tue</item>
-        <item>Wed</item>
-        <item>Thu</item>
-        <item>Fr</item>
-        <item>Sa</item>
-        <item>Sun</item>
-    </string-array>
 </resources>

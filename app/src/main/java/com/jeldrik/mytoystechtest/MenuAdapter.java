@@ -51,11 +51,15 @@ public class MenuAdapter extends BaseAdapter {
     public View getView(int position, View view, ViewGroup viewGroup) {
         View rowView=view;
 
+        //depending on type the corresponding layout is inflated
+
         try {
             if(mData.get(position).getString("type").equals("section")){
                 rowView=mInflater.inflate(R.layout.section_item,viewGroup,false);
                 TextView title=(TextView)rowView.findViewById(R.id.sectionTitle);
                 title.setText(mData.get(position).getString("label"));
+
+                //Section should not be clickable
                 rowView.setEnabled(false);
                 rowView.setOnClickListener(null);
             }

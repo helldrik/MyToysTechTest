@@ -26,10 +26,10 @@ import java.util.ArrayList;
 
 public class MenuFragment extends ListFragment implements AdapterView.OnItemClickListener {
 
-    private String sJsonArray;
-    private String menuTitle;
+    private String sJsonArray; //holds the json data as a String
+    private String menuTitle; //contains the node's label
     private boolean isSubMenu;
-    MenuAdapter mAdapter;
+    MenuAdapter mAdapter; //custom adapter for the listview
     View mView;
 
 
@@ -37,7 +37,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
          mView = inflater.inflate(R.layout.fragment_menu, container, false);
-
+        //Fragment should not be afected by configuration changes
         setRetainInstance(true);
         return mView;
     }
@@ -53,9 +53,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
             menuTitle=extras.getString("menuTitle","");
 
         }
-
-
-
+        //Button to move from child menu up
         Button btn=(Button)mView.findViewById(R.id.closeDrawerBtn);
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,7 +66,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                 }
             }
         });
-
+        //if true, mytoys logo gets swapped for a back button and title is shown
         if(isSubMenu) {
 
             ImageView logo = (ImageView) mView.findViewById(R.id.logo);
@@ -125,7 +123,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
 
         JSONObject jsonObject=mAdapter.getItem(position);
         try{
-            //Toast.makeText(getActivity(), jsonObject.getString("label"), Toast.LENGTH_SHORT).show();
+            //user clicked on a node -> if it has children, pushing current fragment onto backstack and adding new fragment as submenu
             if(jsonObject.getString("type").equals("node")&& jsonObject.has("children")) {
                 //Log.e("MenuFragment",jsonObject.getString("label"));
                 JSONArray jsonArray = jsonObject.getJSONArray("children");
@@ -139,6 +137,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                         .setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right,R.anim.slide_in_right,R.anim.slide_out_left)
                         .replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
             }
+            //user clicked on link or external-link -> MainActivitys openLink() function is called and drawer is closed
             else if((jsonObject.getString("type").equals("link")||jsonObject.getString("type").equals("external-link")) && jsonObject.has("url")){
                 ((MainActivity)getActivity()).openLink(jsonObject.getString("url"));
                 getActivity().onBackPressed();

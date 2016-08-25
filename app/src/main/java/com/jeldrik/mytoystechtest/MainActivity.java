@@ -39,8 +39,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity {
 
     WebView myWebView;
     String url="https://www.mytoys.de";
@@ -65,9 +64,11 @@ public class MainActivity extends AppCompatActivity
         myWebView=(WebView)findViewById(R.id.myWebView);
 
 
+        //preventing reload of webview on orientation changes
         if(savedInstanceState!=null){
             myWebView.restoreState(savedInstanceState);
         }
+        //there is no savedInstanceState -> we load the url into the webview and fetch the data from the server
         else {
             fetchData();
             myWebView.loadUrl(url);
@@ -75,6 +76,7 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
+    //using this method to close the drawer
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -107,20 +109,13 @@ public class MainActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
-    @SuppressWarnings("StatementWithEmptyBody")
-    @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
-
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawer.closeDrawer(GravityCompat.START);
-        return true;
-    }
-
+    //function that gets called from listfragments onItemClicked when a link is clicked
     public void openLink(String url){
         myWebView.loadUrl(url);
     }
 
 
+    //function to make a network request to receive menu data in json format using volley
     private void fetchData(){
         final RequestQueue queue = Volley.newRequestQueue(this);
         String url ="https://mytoysiostestcase1.herokuapp.com/api/navigation";
@@ -131,8 +126,6 @@ public class MainActivity extends AppCompatActivity
 
                     @Override
                     public void onResponse(JSONObject response) {
-                       // Log.e("MainActivity","Response is: "+ response);
-                        //TODO add loading screen to drawer befor starting volley request and swap it with fragment here.
                         try {
                             JSONArray jsonArray = response.getJSONArray("navigationEntries");
 
@@ -153,7 +146,7 @@ public class MainActivity extends AppCompatActivity
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.e("MainActivity","That didn't work! "+error);
+                Log.e("MainActivity","Could not fetch Menu data from Server! "+error);
                 queue.stop();
             }
         }){
