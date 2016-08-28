@@ -9,3 +9,8 @@ In the fragments onActivitycreated method I call a function that recursivly adds
 when the user clicks on a menu item depending on the type of the item I open a new fragment as sub menu and add the current one to 
 the backstack or I call a function from the MainActivity to open a link in the webview.
 Beside of basic testing I was considering doing testing using Esspresso but ended up being a bit short on time..
+
+
+Update:
+Added some basic testing today(Sunday) using junit4 and espresso.
+I hope you don't see it as cheating ;)
