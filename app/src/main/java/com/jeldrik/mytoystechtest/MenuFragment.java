@@ -28,7 +28,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
 
     private String sJsonArray; //holds the json data as a String
     private String menuTitle; //contains the node's label
-    private boolean isSubMenu;
+    public boolean isSubMenu;
     MenuAdapter mAdapter; //custom adapter for the listview
     View mView;
 
@@ -39,6 +39,12 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
          mView = inflater.inflate(R.layout.fragment_menu, container, false);
         //Fragment should not be afected by configuration changes
         setRetainInstance(true);
+
+        sJsonArray="";
+        menuTitle="";
+        isSubMenu=false;
+        mAdapter = new MenuAdapter(getActivity());
+
         return mView;
     }
 
@@ -88,7 +94,6 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
 
 
         try {
-                mAdapter = new MenuAdapter(getActivity());
                 JSONArray jsonArray = new JSONArray(sJsonArray);
                 parseJson(jsonArray);
                 setListAdapter(mAdapter);
@@ -135,7 +140,7 @@ public class MenuFragment extends ListFragment implements AdapterView.OnItemClic
                 subMenuFragment.setArguments(bundle);
                 getActivity().getSupportFragmentManager().beginTransaction()
                         .setCustomAnimations(R.anim.slide_in_left,R.anim.slide_out_right,R.anim.slide_in_right,R.anim.slide_out_left)
-                        .replace(R.id.content_frame, subMenuFragment).addToBackStack(null).commit();
+                        .replace(R.id.content_frame, subMenuFragment,"SubMenu").addToBackStack(null).commit();
             }
             //user clicked on link or external-link -> MainActivitys openLink() function is called and drawer is closed
             else if((jsonObject.getString("type").equals("link")||jsonObject.getString("type").equals("external-link")) && jsonObject.has("url")){

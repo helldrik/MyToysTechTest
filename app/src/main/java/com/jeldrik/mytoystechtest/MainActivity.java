@@ -56,7 +56,26 @@ public class MainActivity extends AppCompatActivity {
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+                this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close){
+            @Override
+            public void onDrawerOpened(View drawerView) {
+                super.onDrawerOpened(drawerView);
+                super.setDrawerIndicatorEnabled(false);
+            }
+
+            @Override
+            public void onDrawerSlide(View drawerView, float slideOffset) {
+                super.onDrawerSlide(drawerView, slideOffset);
+                if(!super.isDrawerIndicatorEnabled())
+                    super.setDrawerIndicatorEnabled(true);
+            }
+
+            @Override
+            public void onDrawerClosed(View drawerView) {
+                super.onDrawerClosed(drawerView);
+
+            }
+        };
         drawer.setDrawerListener(toggle);
         toggle.syncState();
 
@@ -116,7 +135,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     //function to make a network request to receive menu data in json format using volley
-    private void fetchData(){
+    public void fetchData(){
         final RequestQueue queue = Volley.newRequestQueue(this);
         String url ="https://mytoysiostestcase1.herokuapp.com/api/navigation";
 
@@ -135,7 +154,7 @@ public class MainActivity extends AppCompatActivity {
 
                             Fragment menuFragment=new MenuFragment();
                             menuFragment.setArguments(b);
-                            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment).commit();
+                            getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, menuFragment,"Menu").commit();
                             queue.stop();
 
                         }catch(JSONException e) {
